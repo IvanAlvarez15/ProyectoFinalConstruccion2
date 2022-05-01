@@ -407,24 +407,39 @@ def Dashboard_Personal(request,id):
             d['tiempo'] = i[1]
             data.append([i[0],i[1]/60]) #Necesita dos numeros
         datos_json = dumps(data)
+
         #Grafica 2
-        h_var2 = '  Country'
-        v_var2 = 'Popularity'
-        data2 = [[h_var2,v_var2]]
+        h_var22 = 'Username'
+        v_var23 = 'Points per game'
+        v_var24 = 'Date'
+        v_var25 = 'Time played'
+        v_var26 = 'Level Reached'
+        data2 = [[h_var22,v_var23,v_var24,v_var25,v_var26]]
         # for i in range(0,11):
         #     data.append([randrange(101),randrange(101)])
-        h_var_json2 = dumps(h_var2)
-        v_var_json2 = dumps(v_var2)
+        # h_var_json2 = dumps(h_var2)
+        # v_var_json2 = dumps(v_var2)
         # datos_json = dumps(data)
         mydb2 = sqlite3.connect("db.sqlite3")
         cur2 = mydb2.cursor()
-        cur2.execute("SELECT country FROM users_user WHERE id = ?",[id])
+        cur2.execute("SELECT Nombre_usuario, Puntos_por_partida, Fecha_del_juego, Tiempo_jugado, ID_Canciones FROM users_Historial WHERE ID_Usuario = ?",[id])
         rows2 = cur2.fetchall()
         for i in rows2:
+            print(i)
             r = {}
-            r['paises'] = i[0]
-            data2.append([i[0],""]) #Necesita dos numeros
+            r['nombre_usuario'] = i[0]
+            r['puntos_partida'] = i[1]
+            r['Fecha_de_juego'] = i[2]
+            r['Tiempo_jugado'] = i[3]
+            r['ID_Canciones'] = i[4]
+            # r['Fecha'] = i[2]
+            # r['Tiempo'] = i[3]
+            # r['ID_Canciones'] = i[4]
+            # data2.append([i[0],i[1],i[2],i[3],i[4]]) #Necesita dos numeros
+            data2.append([i[0], i[1], i[2], i[3]/60, i[4]])
         datos_json2 = dumps(data2)
+        print(datos_json2)
+
         #Grafica 3
         h_var3 = 'ID of the level'
         v_var3 = 'Time of play in minutes'
@@ -446,8 +461,8 @@ def Dashboard_Personal(request,id):
         datos_json3 = dumps(data3)
 
         #Grafica 4
-        h_var4 = 'Time played in minutes'
-        v_var4 = 'ID user'
+        h_var4 = 'Points per game'
+        v_var4 = 'Date'
         data4 = [[h_var4,v_var4]]
         # for i in range(0,11):
         #     data.append([randrange(101),randrange(101)])
@@ -457,15 +472,21 @@ def Dashboard_Personal(request,id):
 
         mydb4 = sqlite3.connect("db.sqlite3")
         cur4 = mydb4.cursor()
-        cur4.execute ("SELECT Tiempo_jugado ,ID_usuario FROM users_Historial WHERE ID_Usuario = ?" , [id])
+        #stringSQL4 = '''SELECT Puntos_por_partida ,Nombre_usuario FROM users_Historial ORDER BY Puntos_por_partida DESC LIMIT 1'''
+        cur4.execute( "SELECT Puntos_por_partida, Fecha_del_juego FROM users_Historial WHERE ID_Usuario = ? ", [id])
         rows4 = cur4.fetchall()
         listasalida4 = []
+        
         for i in rows4:
+            #print(i)
             d = {}
             d['puntos'] = i[0]
-            d['tiempo'] = i[1]
-            data4.append([i[0]/60,i[1]]) #Necesita dos numeros
+            d['user'] = i[1]
+            data4.append([i[1],i[0]]) #Necesita dos numeros
+        #print(data4)
         datos_json4 = dumps(data4)
+        #datos_json4 = data4
+        #print(datos_json4)
 
         #Grafica 5
         h_var5 = 'Levels reached'
@@ -490,7 +511,7 @@ def Dashboard_Personal(request,id):
         datos_json5 = dumps(data5)
 
         return render(request, 'users/Dashboard_Personal.html', {'values':datos_json,'h_title':h_var_json,'v_title':v_var_json
-                                                        ,'values2':datos_json2,'h_title2':h_var_json2,'v_title2':v_var_json2,
+                                                        ,'values2':datos_json2,
                                                         'values3':datos_json3,'h_title3':h_var_json3,'v_title3':v_var_json3 , 'contexto': context,'values4':datos_json4,'h_title4':h_var_json4,'v_title4':v_var_json4
                                                  ,'values5':datos_json5,'h_title5':h_var_json5,'v_title5':v_var_json5})
             #return render(request, 'users/Dashboard_Personal.html',{})
