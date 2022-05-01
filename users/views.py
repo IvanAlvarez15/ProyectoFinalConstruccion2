@@ -187,7 +187,7 @@ def estadisticasglobales(request):
         data.append([i[0],i[1]/60]) #Necesita dos numeros
     datos_json = dumps(data)
     #Grafica 2
-    h_var2 = '  Country'
+    h_var2 = 'Country'
     v_var2 = 'Popularity'
     data2 = [[h_var2,v_var2]]
     # for i in range(0,11):
@@ -199,13 +199,23 @@ def estadisticasglobales(request):
     cur2 = mydb2.cursor()
     stringSQL2 = ''' SELECT DISTINCT country FROM users_user'''
     rows2 = cur2.execute(stringSQL2)
-
+    
+    
     for i in rows2:
         r = {}
         r['paises'] = i[0]
 
-        data2.append([i[0],""]) #Necesita dos numeros
+        mydb22 = sqlite3.connect("db.sqlite3")
+        cur22 = mydb22.cursor()
+        cur22.execute ("SELECT COUNT(country) FROM users_user WHERE country = ?" , [i[0]])
+        rows22 = cur22.fetchall()
+        print(rows22[0])#Imprime bien
+
+        #r['repeticiones'] = i[1]
+        data2.append([i[0],rows22[0][0]]) #Necesita dos numeros
     datos_json2 = dumps(data2)
+    print(datos_json2)
+
     #Grafica 3
     h_var3 = 'ID of the level'
     v_var3 = 'Time of play in minutes'
@@ -229,8 +239,8 @@ def estadisticasglobales(request):
 
 
     #Grafica 4
-    h_var4 = 'Time played in minutes'
-    v_var4 = 'ID user'
+    h_var4 = 'Points per game'
+    v_var4 = 'User name'
     data4 = [[h_var4,v_var4]]
     # for i in range(0,11):
     #     data.append([randrange(101),randrange(101)])
@@ -240,15 +250,20 @@ def estadisticasglobales(request):
 
     mydb4 = sqlite3.connect("db.sqlite3")
     cur4 = mydb4.cursor()
-    stringSQL4 = '''SELECT Tiempo_jugado ,ID_usuario FROM users_Historial ORDER BY Tiempo_jugado DESC'''
+    stringSQL4 = '''SELECT Puntos_por_partida ,Nombre_usuario FROM users_Historial ORDER BY Puntos_por_partida DESC LIMIT 5'''
     rows4 = cur4.execute(stringSQL4)
     listasalida4 = []
+    
     for i in rows4:
+        #print(i)
         d = {}
         d['puntos'] = i[0]
-        d['tiempo'] = i[1]
-        data4.append([i[0]/60,i[1]]) #Necesita dos numeros
+        d['user'] = i[1]
+        data4.append([i[1],i[0]]) #Necesita dos numeros
+    #print(data4)
     datos_json4 = dumps(data4)
+    #datos_json4 = data4
+    #print(datos_json4)
 
     #Grafica 5
     h_var5 = 'Levels reached'
@@ -271,6 +286,9 @@ def estadisticasglobales(request):
         d['tiempo'] = i[1]
         data5.append([i[0],i[1]]) #Necesita dos numeros
     datos_json5 = dumps(data5)
+    print(datos_json5)
+
+
 
     return render(request, 'users/stadistics-global.html', {'values':datos_json,'h_title':h_var_json,'v_title':v_var_json
                                                  ,'values2':datos_json2,'h_title2':h_var_json2,'v_title2':v_var_json2,
@@ -400,7 +418,7 @@ def Dashboard_Personal(request,id):
         # datos_json = dumps(data)
         mydb2 = sqlite3.connect("db.sqlite3")
         cur2 = mydb2.cursor()
-        cur2.execute("SELECT DISTINCT country FROM users_user WHERE id = ?",[id])
+        cur2.execute("SELECT country FROM users_user WHERE id = ?",[id])
         rows2 = cur2.fetchall()
         for i in rows2:
             r = {}
