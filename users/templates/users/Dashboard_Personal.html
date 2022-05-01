@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{% static 'PAS/main.css' %}">
     <link rel="stylesheet" href="{% static 'PAS/our-players.css' %}" type="text/css">
     <link rel="icon" type="image/png" href="{% static 'PAS/src/img/icons/Favicon.png' %}">
-    <title>Our players</title>
+    <title>Personal Dashboard</title>
     <link rel="stylesheet" type="text/css" href="{% static 'PAS/Dashboard.css' %}">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -29,18 +29,18 @@
           vAxis: {title: {{v_title|safe}}},
           legend: 'none'
         };
-        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
         chart.draw(data, options);
 
         //Grafica 2
         var data2 = google.visualization.arrayToDataTable({{values2|safe}});
         var options2 = {
-          title: {{h_title2|safe}} +' vs. '+ {{v_title2|safe}},
-          hAxis: {title: {{h_title2|safe}}},
-          vAxis: {title: {{v_title2|safe}}},
+          //title: {{h_title2|safe}} +' vs. '+ {{v_title2|safe}},
+          //hAxis: {title: {{h_title2|safe}}},
+          //vAxis: {title: {{v_title2|safe}}},
           legend: 'none'
         };
-        var chart2 = new google.visualization.GeoChart(document.getElementById('regions_div'));
+        var chart2 = new google.visualization.Table(document.getElementById('regions_div'));
         chart2.draw(data2, options2);
       
 
@@ -66,7 +66,7 @@
             //legend: { position: 'bottom' }
             legend:'none'
           };
-          var chart4 = new google.visualization.ScatterChart(document.getElementById('chart_div4'));
+          var chart4 = new google.visualization.BarChart(document.getElementById('chart_div4'));
           chart4.draw(data4, options4);
 
         //Grafica 5
@@ -140,17 +140,17 @@
     <div id="chart_div" style="width: 800px; height: 500px;"></div>
     <h2></h2>
     <h3>Chart 2</h3>
-    <h3>Your Country</h3>
-    <div id="regions_div" style="width: 800px; height: 500px;"></div>
+    <h3>Personal Records</h3>
+    <div id="regions_div" style="width: 800px; height: 500px; text-align: center;"></div>
     <h2></h2>
     <h3>Chart 3</h3>
-    <h3>ID of the level vs. Time of play in minutes</h3>
+    <h3>Points per level</h3>
     <div id="chart_div3" style="width: 800px; height: 500px;"></div>
     <h3>Chart 4</h3>
-    <h3> Time of play in minutes vs. ID user</h3>
+    <h3> Points per date</h3>
     <div id="chart_div4" style="width: 800px; height: 500px;"></div>
     <h3>Chart 5</h3>
-    <h3>ID Level vs. ID user</h3>
+    <h3>Levels reached</h3>
     <div id="chart_div5" style="width: 800px; height: 500px;"></div>
 
     <div class="container footer-div">
