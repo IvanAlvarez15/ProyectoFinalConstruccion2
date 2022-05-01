@@ -226,9 +226,57 @@ def estadisticasglobales(request):
         data3.append([i[1],i[0]/60]) #Necesita tres numeros
 
     datos_json3 = dumps(data3)
+
+
+    #Grafica 4
+    h_var4 = 'Time played in minutes'
+    v_var4 = 'ID user'
+    data4 = [[h_var4,v_var4]]
+    # for i in range(0,11):
+    #     data.append([randrange(101),randrange(101)])
+    h_var_json4 = dumps(h_var4)
+    v_var_json4 = dumps(v_var4)
+    # datos_json = dumps(data)
+
+    mydb4 = sqlite3.connect("db.sqlite3")
+    cur4 = mydb4.cursor()
+    stringSQL4 = '''SELECT Tiempo_jugado ,ID_usuario FROM users_Historial ORDER BY Tiempo_jugado DESC'''
+    rows4 = cur4.execute(stringSQL4)
+    listasalida4 = []
+    for i in rows4:
+        d = {}
+        d['puntos'] = i[0]
+        d['tiempo'] = i[1]
+        data4.append([i[0]/60,i[1]]) #Necesita dos numeros
+    datos_json4 = dumps(data4)
+
+    #Grafica 5
+    h_var5 = 'Levels reached'
+    v_var5 = 'ID user'
+    data5 = [[h_var5,v_var5]]
+    # for i in range(0,11):
+    #     data.append([randrange(101),randrange(101)])
+    h_var_json5 = dumps(h_var5)
+    v_var_json5 = dumps(v_var5)
+    # datos_json = dumps(data)
+
+    mydb5 = sqlite3.connect("db.sqlite3")
+    cur5 = mydb5.cursor()
+    stringSQL5 = '''SELECT ID_Canciones ,ID_usuario FROM users_Historial ORDER BY Tiempo_jugado DESC'''
+    rows5 = cur5.execute(stringSQL5)
+    listasalida5 = []
+    for i in rows5:
+        d = {}
+        d['puntos'] = i[0]
+        d['tiempo'] = i[1]
+        data5.append([i[0],i[1]]) #Necesita dos numeros
+    datos_json5 = dumps(data5)
+
     return render(request, 'users/stadistics-global.html', {'values':datos_json,'h_title':h_var_json,'v_title':v_var_json
                                                  ,'values2':datos_json2,'h_title2':h_var_json2,'v_title2':v_var_json2,
-                                                 'values3':datos_json3,'h_title3':h_var_json3,'v_title3':v_var_json3 , 'contexto': context})
+                                                 'values3':datos_json3,'h_title3':h_var_json3,'v_title3':v_var_json3 , 'contexto': context
+                                                 ,'values4':datos_json4,'h_title4':h_var_json4,'v_title4':v_var_json4
+                                                 ,'values5':datos_json5,'h_title5':h_var_json5,'v_title5':v_var_json5 })
 
 def estadisticaspersonales(request): 
     if request.user.is_authenticated:
@@ -378,10 +426,56 @@ def Dashboard_Personal(request,id):
             rr['id'] = i[1]
             data3.append([i[1],i[0]/60]) #Necesita tres numeros
         datos_json3 = dumps(data3)
+
+        #Grafica 4
+        h_var4 = 'Time played in minutes'
+        v_var4 = 'ID user'
+        data4 = [[h_var4,v_var4]]
+        # for i in range(0,11):
+        #     data.append([randrange(101),randrange(101)])
+        h_var_json4 = dumps(h_var4)
+        v_var_json4 = dumps(v_var4)
+        # datos_json = dumps(data)
+
+        mydb4 = sqlite3.connect("db.sqlite3")
+        cur4 = mydb4.cursor()
+        cur4.execute ("SELECT Tiempo_jugado ,ID_usuario FROM users_Historial WHERE ID_Usuario = ?" , [id])
+        rows4 = cur4.fetchall()
+        listasalida4 = []
+        for i in rows4:
+            d = {}
+            d['puntos'] = i[0]
+            d['tiempo'] = i[1]
+            data4.append([i[0]/60,i[1]]) #Necesita dos numeros
+        datos_json4 = dumps(data4)
+
+        #Grafica 5
+        h_var5 = 'Levels reached'
+        v_var5 = 'ID user'
+        data5 = [[h_var5,v_var5]]
+        # for i in range(0,11):
+        #     data.append([randrange(101),randrange(101)])
+        h_var_json5 = dumps(h_var5)
+        v_var_json5 = dumps(v_var5)
+        # datos_json = dumps(data)
+
+        mydb5 = sqlite3.connect("db.sqlite3")
+        cur5 = mydb5.cursor()
+        cur5.execute("SELECT ID_Canciones ,ID_usuario FROM users_Historial WHERE ID_Usuario = ?", [id])
+        rows5 = cur5.fetchall()
+        listasalida5 = []
+        for i in rows5:
+            d = {}
+            d['puntos'] = i[0]
+            d['tiempo'] = i[1]
+            data5.append([i[0],i[1]]) #Necesita dos numeros
+        datos_json5 = dumps(data5)
+
         return render(request, 'users/Dashboard_Personal.html', {'values':datos_json,'h_title':h_var_json,'v_title':v_var_json
-                                                    ,'values2':datos_json2,'h_title2':h_var_json2,'v_title2':v_var_json2,
-                                                    'values3':datos_json3,'h_title3':h_var_json3,'v_title3':v_var_json3 , 'contexto': context})
-        #return render(request, 'users/Dashboard_Personal.html',{})
+                                                        ,'values2':datos_json2,'h_title2':h_var_json2,'v_title2':v_var_json2,
+                                                        'values3':datos_json3,'h_title3':h_var_json3,'v_title3':v_var_json3 , 'contexto': context,'values4':datos_json4,'h_title4':h_var_json4,'v_title4':v_var_json4
+                                                 ,'values5':datos_json5,'h_title5':h_var_json5,'v_title5':v_var_json5})
+            #return render(request, 'users/Dashboard_Personal.html',{})
     else:
         return render(request, 'users/index.html', {})
 
